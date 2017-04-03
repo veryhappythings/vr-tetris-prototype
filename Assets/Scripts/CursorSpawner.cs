@@ -16,32 +16,30 @@ public class CursorSpawner : MonoBehaviour {
 	}
 
     Vector3 CursorPositionInWorld () {
-        Vector3 m = Input.mousePosition;
+        Vector3 m = transform.position;
+        return m;
         // Translate the mouse position away from the camera down to the world
-        m = new Vector3(m.x, m.y, m.z - transform.position.z);
+        //m = new Vector3(m.x, m.y, m.z - transform.position.z);
 
-        return GetComponent<Camera>().ScreenToWorldPoint(m);
+        //return GetComponent<Camera>().ScreenToWorldPoint(m);
     }
 
     Vector3 CursorPositionInGrid () {
-        Vector3 m = Input.mousePosition;
-        // Translate the mouse position away from the camera down to the world
-        m = new Vector3(m.x, m.y, m.z - transform.position.z);
-
-        Vector3 p = GetComponent<Camera>().ScreenToWorldPoint(m);
+        Vector3 p = transform.position;
         // Clamp the position into the grid
-        Vector2 nearest = Grid.NearestGridPoint(p);
-        return new Vector3(nearest.x, nearest.y, p.z);
+        Vector2 nearest = Grid.NearestGridPointPositionInSpace(p);
+        return new Vector3(nearest.x, nearest.y, Grid.z);
     }
 
 	// Update is called once per frame
 	void Update () {
 		if (CurrentGroup != null) {
-            Vector3 p = CursorPositionInWorld();
+            //Vector3 p = CursorPositionInWorld();
+            Vector3 p = transform.position;
             CurrentGroup.transform.position = new Vector3(p.x, p.y, p.z);
 
-            Vector3 g = CursorPositionInGrid();
-            WireFrame.transform.position = new Vector3(g.x, g.y, g.z);
+            WireFrame.transform.position = Grid.NearestGridPointPositionInSpace(transform.position);
+            Debug.Log(WireFrame.transform.position);
 
             if (WireFrame.GetComponent<Group>().IsValidGridPosition()) {
                 SetWireFrameValid();
@@ -50,7 +48,7 @@ public class CursorSpawner : MonoBehaviour {
             }
 
             if (Input.GetMouseButtonDown(0)){
-                CurrentGroup.transform.position = new Vector3(g.x, g.y, g.z);
+                CurrentGroup.transform.position = WireFrame.transform.position;
                 CurrentGroup.GetComponent<Group>().enabled = true;
                 Destroy(WireFrame);
                 SpawnNext();
@@ -81,6 +79,7 @@ public class CursorSpawner : MonoBehaviour {
                 Quaternion.identity
         );
         SetWireFrameValid();
+        WireFrame.transform.localScale = new Vector3(Grid.blockSize, Grid.blockSize, Grid.blockSize);
         WireFrame.GetComponent<Group>().enabled = false;
     }
 
@@ -92,6 +91,7 @@ public class CursorSpawner : MonoBehaviour {
                 p,
                 Quaternion.identity
         );
+        CurrentGroup.transform.localScale = new Vector3(Grid.blockSize, Grid.blockSize, Grid.blockSize);
         CurrentGroup.GetComponent<Group>().enabled = false;
         SpawnWireFrame(i);
     }
