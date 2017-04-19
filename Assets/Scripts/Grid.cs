@@ -14,10 +14,10 @@ public class Grid : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Vector3 p = leftWall.transform.position;
-        leftWall.transform.position = new Vector3(0, p.y, p.z);
-        p = rightWall.transform.position;
-        rightWall.transform.position = new Vector3(w * blockSize, p.y, p.z);
+        Vector3 leftWallPosition = leftWall.transform.position;
+        leftWall.transform.position = new Vector3(-0.5f - (blockSize / 2), leftWallPosition.y, leftWallPosition.z);
+        Vector3 rightWallPosition = rightWall.transform.position;
+        rightWall.transform.position = new Vector3((w * blockSize) + (0.5f - blockSize / 2), rightWallPosition.y, rightWallPosition.z);
 	}
 
 	// Update is called once per frame
