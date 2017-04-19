@@ -2,18 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CursorSpawner : MonoBehaviour {
     public Material valid;
     public Material invalid;
     public GameObject[] groups;
     private GameObject CurrentGroup;
     private GameObject WireFrame;
+    private SteamVR_TrackedController _controller;
 
 	// Use this for initialization
 	void Start () {
+        _controller = GetComponent<SteamVR_TrackedController>();
+        _controller.TriggerClicked += HandleTriggerClicked;
         Cursor.visible = true;
         SpawnNext();
 	}
+
+    void HandleTriggerClicked(object sender, ClickedEventArgs e)
+    {
+        CurrentGroup.transform.position = WireFrame.transform.position;
+        CurrentGroup.GetComponent<Group>().enabled = true;
+        Destroy(WireFrame);
+        SpawnNext();
+    }
 
     Vector3 CursorPositionInWorld () {
         Vector3 m = transform.position;

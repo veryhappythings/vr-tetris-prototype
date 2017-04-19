@@ -13,11 +13,11 @@ public class Group : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (Time.time - TimeOfLastFall > 1) {
-            transform.position += new Vector3(0, -1, 0);
+            transform.position += new Vector3(0, -Grid.blockSize, 0);
             if (IsValidGridPosition()) {
                 UpdateGrid();
             } else {
-                transform.position -= new Vector3(0, -1, 0);
+                transform.position -= new Vector3(0, -Grid.blockSize, 0);
                 Grid.DeleteFullRows();
                 //FindObjectOfType<Spawner>().SpawnNext();
                 enabled = false;
