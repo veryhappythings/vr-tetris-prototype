@@ -7,7 +7,7 @@ public class Group : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+        UpdateGrid();
 	}
 
 	// Update is called once per frame
