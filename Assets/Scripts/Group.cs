@@ -19,7 +19,6 @@ public class Group : MonoBehaviour {
             } else {
                 transform.position -= new Vector3(0, -Grid.blockSize, 0);
                 Grid.DeleteFullRows();
-                //FindObjectOfType<Spawner>().SpawnNext();
                 enabled = false;
             }
             TimeOfLastFall = Time.time;
@@ -40,7 +39,7 @@ public class Group : MonoBehaviour {
 
         // Add self to grid again
         foreach (Transform child in transform) {
-            Vector2 v = Grid.RoundVec2(child.position);
+            Vector2 v = Grid.NearestGridPoint(child.position);
             Grid.grid[(int)v.x, (int)v.y] = child;
         }
     }
