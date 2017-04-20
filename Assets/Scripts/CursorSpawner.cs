@@ -30,10 +30,6 @@ public class CursorSpawner : MonoBehaviour {
     Vector3 CursorPositionInWorld () {
         Vector3 m = transform.position;
         return m;
-        // Translate the mouse position away from the camera down to the world
-        //m = new Vector3(m.x, m.y, m.z - transform.position.z);
-
-        //return GetComponent<Camera>().ScreenToWorldPoint(m);
     }
 
     Vector3 CursorPositionInGrid () {
@@ -46,26 +42,16 @@ public class CursorSpawner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (CurrentGroup != null) {
-            //Vector3 p = CursorPositionInWorld();
             Vector3 p = transform.position;
             CurrentGroup.transform.position = new Vector3(p.x, p.y, p.z);
 
             WireFrame.transform.position = Grid.NearestGridPointPositionInSpace(transform.position);
-            Debug.Log(WireFrame.transform.position);
 
             if (WireFrame.GetComponent<Group>().IsValidGridPosition()) {
                 SetWireFrameValid();
             } else {
                 SetWireFrameInvalid();
             }
-
-            if (Input.GetMouseButtonDown(0)){
-                CurrentGroup.transform.position = WireFrame.transform.position;
-                CurrentGroup.GetComponent<Group>().enabled = true;
-                Destroy(WireFrame);
-                SpawnNext();
-            }
-
         }
 	}
 

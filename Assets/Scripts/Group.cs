@@ -47,16 +47,18 @@ public class Group : MonoBehaviour {
 
     public bool IsValidGridPosition() {
         foreach (Transform child in transform) {
-            Vector2 v = Grid.RoundVec2(child.position);
+            Vector2 v = child.position;
+            Vector2 gridPoint = Grid.NearestGridPoint(v);
+            Debug.Log("Pos: " + v);
+            Debug.Log("Grid point: " + gridPoint);
 
-            // If it's not inside the border, it's not valid
             if (!Grid.InsideBorder(v)) {
                 Debug.Log("Not in border");
                 return false;
             }
 
             // If there's a block in the grid cell, it's not valid
-            if (Grid.grid[(int)v.x, (int)v.y] != null && Grid.grid[(int)v.x, (int)v.y].parent != transform) {
+            if (Grid.grid[(int)gridPoint.x, (int)gridPoint.y] != null && Grid.grid[(int)gridPoint.x, (int)gridPoint.y].parent != transform) {
                 return false;
             }
         }

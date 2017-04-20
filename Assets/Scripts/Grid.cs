@@ -15,9 +15,9 @@ public class Grid : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Vector3 leftWallPosition = leftWall.transform.position;
-        leftWall.transform.position = new Vector3(-0.5f - (blockSize / 2), leftWallPosition.y, leftWallPosition.z);
+        leftWall.transform.position = new Vector3(0 - (blockSize / 2), leftWallPosition.y, leftWallPosition.z);
         Vector3 rightWallPosition = rightWall.transform.position;
-        rightWall.transform.position = new Vector3((w * blockSize) + (0.5f - blockSize / 2), rightWallPosition.y, rightWallPosition.z);
+        rightWall.transform.position = new Vector3(((w - 1) * blockSize) + (blockSize / 2), rightWallPosition.y, rightWallPosition.z);
 	}
 
 	// Update is called once per frame
@@ -37,9 +37,10 @@ public class Grid : MonoBehaviour {
     }
 
     public static bool InsideBorder(Vector2 v) {
+        float rightEdge = w * blockSize;
         return (
             v.x >= 0 &&
-            v.x < w * blockSize &&
+            v.x < rightEdge &&
             v.y >= 0
         );
     }
