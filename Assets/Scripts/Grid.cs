@@ -40,12 +40,15 @@ public class Grid : MonoBehaviour {
         {
             if (grid[x, y] != null)
             {
+                Debug.Log("Decreasing:");
+                Debug.Log(x);
+                Debug.Log(y);
                 // Move one towards bottom
                 grid[x, y - 1] = grid[x, y];
                 grid[x, y] = null;
 
                 // Update Block position
-                grid[x, y - 1].position += new Vector3(0, -1, 0);
+                grid[x, y - 1].position += new Vector3(0, -blockSize, 0);
             }
         }
     }

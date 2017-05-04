@@ -17,9 +17,15 @@ public class Group : MonoBehaviour {
             if (IsValidGridPosition()) {
                 UpdateGrid();
             } else {
+                bool blockedByMovingBlock = BlockedByMovingBlock();
                 transform.position -= new Vector3(0, -Grid.blockSize, 0);
-                Grid.DeleteFullRows();
-                enabled = false;
+                Debug.Log("Invalid position!");
+                if (!blockedByMovingBlock)
+                {
+                    Debug.Log("I was blocked by a static block");
+                    Grid.DeleteFullRows();
+                    enabled = false;
+                }
             }
             TimeOfLastFall = Time.time;
         }
@@ -44,21 +50,45 @@ public class Group : MonoBehaviour {
         }
     }
 
+    public bool BlockedByMovingBlock() {
+        foreach (Transform child in transform) {
+            Vector2 v = child.position;
+            Vector2 gridPoint = Grid.NearestGridPoint(v);
+
+            if (Grid.grid[(int)gridPoint.x, (int)gridPoint.y] != null)
+            {
+                Transform collision = Grid.grid[(int)gridPoint.x, (int)gridPoint.y];
+                if (collision.parent.GetComponent<Group>().enabled)
+                {
+                    if (collision.parent != transform)
+                    {
+                        Debug.Log("Collision with enabled block");
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public bool IsValidGridPosition() {
         foreach (Transform child in transform) {
             Vector2 v = child.position;
             Vector2 gridPoint = Grid.NearestGridPoint(v);
-            Debug.Log("Pos: " + v);
-            Debug.Log("Grid point: " + gridPoint);
 
             if (!Grid.InsideBorder(v)) {
-                Debug.Log("Not in border");
                 return false;
             }
 
             // If there's a block in the grid cell, it's not valid
-            if (Grid.grid[(int)gridPoint.x, (int)gridPoint.y] != null && Grid.grid[(int)gridPoint.x, (int)gridPoint.y].parent != transform) {
-                return false;
+            if (Grid.grid[(int)gridPoint.x, (int)gridPoint.y] != null)
+            {
+                Transform collision = Grid.grid[(int)gridPoint.x, (int)gridPoint.y];
+                if (collision.parent != transform)
+                {
+                    return false;
+                }
             }
         }
 
