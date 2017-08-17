@@ -22,6 +22,7 @@ public class CursorSpawner : MonoBehaviour {
     void HandleTriggerClicked(object sender, ClickedEventArgs e)
     {
         CurrentGroup.transform.position = WireFrame.transform.position;
+        CurrentGroup.transform.rotation = WireFrame.transform.rotation;
         CurrentGroup.GetComponent<Group>().enabled = true;
         Destroy(WireFrame);
         SpawnNext();
@@ -44,8 +45,23 @@ public class CursorSpawner : MonoBehaviour {
 		if (CurrentGroup != null) {
             Vector3 p = transform.position;
             CurrentGroup.transform.position = new Vector3(p.x, p.y, p.z);
+            CurrentGroup.transform.rotation = transform.rotation;
 
             WireFrame.transform.position = Grid.NearestGridPointPositionInSpace(transform.position);
+
+            Vector3 t = CurrentGroup.transform.rotation.eulerAngles;
+            t.z = Mathf.Round(t.z / 90) * 90;
+
+            WireFrame.transform.eulerAngles = new Vector3(0, 0, t.z);
+            // FIXME I don't know why this rotation won't work yet
+            //Quaternion r = WireFrame.transform.rotation;
+            // WireFrame.transform.rotation = new Quaternion(r.x, r.y, transform.rotation.z, r.w);
+            //float rotation = transform.rotation.z - r.eulerAngles.z;
+            //Debug.Log("Current rotation of hand: " + transform.rotation.z);
+            //Debug.Log("Current rotation of wireframe: " + r.eulerAngles.z);
+            //Debug.Log("I think I need to rotate " + rotation);
+            //WireFrame.transform.Rotate(0, 0, rotation);
+
 
             if (WireFrame.GetComponent<Group>().IsValidGridPosition()) {
                 SetWireFrameValid();
